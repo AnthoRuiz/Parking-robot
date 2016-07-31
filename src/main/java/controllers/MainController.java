@@ -27,7 +27,7 @@ public class MainController {
     public void startSystem() {
         MainView mainView = new MainView();
         mainView.setVisible(true);
-        this.trigger();
+        //this.trigger();
     }
 
     public Connection addConfigDataBase(DataBase dataBase) {

@@ -6,6 +6,7 @@
 package views;
 
 import VO.DataBase;
+import controllers.CopyFileDB;
 import controllers.MainController;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -137,6 +138,9 @@ extends JDialog {
             if (connection != null) {
                 this.clearConfig();
                 this.dispose();
+                CopyFileDB copyFileDB = new CopyFileDB();
+                copyFileDB.getDataParking(connection);
+                copyFileDB.getDataTypeVehicle(connection);
                 JOptionPane.showMessageDialog(null, "Configuracion Exitosa!");
             } else {
                 JOptionPane.showMessageDialog(null, "Configuracion Fallida!");
