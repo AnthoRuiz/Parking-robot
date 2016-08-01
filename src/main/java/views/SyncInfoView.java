@@ -156,7 +156,7 @@ public class SyncInfoView
                 
                 
                 
-                System.out.println(parkingCloudList.toString());
+                //System.out.println(parkingCloudList.toString());
                 //System.out.println(tipoVehiculoList.toString());
                 JOptionPane.showMessageDialog(null, "Configuracion Exitosa!");
             } else {
