@@ -1,12 +1,15 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+* To change this license header, choose License Headers in Project Properties.
+* To change this template file, choose Tools | Templates
+* and open the template in the editor.
+*/
 package views;
 
 import VO.DataBase;
+import VO.Parking;
+import VO.TipoVehiculo;
 import controllers.CopyFileDB;
+import controllers.CopyFileMyDB;
 import controllers.MainController;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -19,6 +22,7 @@ import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
+import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -31,7 +35,7 @@ import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
 public class SyncInfoView
-extends JDialog {
+        extends JDialog {
     private final JPanel contentPanel = new JPanel();
     private JTextField textNameDB;
     private JTextField textUserDB;
@@ -42,7 +46,7 @@ extends JDialog {
     private JButton cancelButton;
     private JPasswordField passDB;
     private MainController mainController = new MainController();
-
+    
     public SyncInfoView(Frame parent, boolean modal) {
         super(parent, modal);
         this.initComponents();
@@ -53,7 +57,7 @@ extends JDialog {
         this.setLocationRelativeTo(parent);
         this.setResizable(false);
     }
-
+    
     private void initComponents() {
         this.getContentPane().setLayout(new BorderLayout());
         this.contentPanel.setBackground(new Color(176, 224, 230));
@@ -101,7 +105,7 @@ extends JDialog {
         this.buttonPane.add(this.okButton);
         this.getRootPane().setDefaultButton(this.okButton);
         this.okButton.addActionListener(new ActionListener(){
-
+            
             @Override
             public void actionPerformed(ActionEvent evt) {
                 SyncInfoView.this.okButtonActionPerformed(evt);
@@ -111,23 +115,30 @@ extends JDialog {
         this.cancelButton.setActionCommand("Cancel");
         this.buttonPane.add(this.cancelButton);
         this.cancelButton.addActionListener(new ActionListener(){
-
+            
             @Override
             public void actionPerformed(ActionEvent evt) {
                 SyncInfoView.this.cancelButtonActionPerformed(evt);
             }
         });
     }
-
+    
     protected void cancelButtonActionPerformed(ActionEvent evt) {
         this.dispose();
     }
-
+    
     protected void okButtonActionPerformed(ActionEvent evt) {
         this.addConfigDataBase();
     }
-
+    
     private void addConfigDataBase() {
+        Parking parking = new Parking();
+        ArrayList<TipoVehiculo> tipoVehiculoList = new ArrayList<TipoVehiculo>();
+        
+        ArrayList<Parking> parkingCloudList = new ArrayList<Parking>();
+        CopyFileDB copyFileDB = new CopyFileDB();
+        CopyFileMyDB copyFileMyDB = new CopyFileMyDB();
+        //TipoVehiculo tipoVehiculo = new TipoVehiculo();
         DataBase dataBase = new DataBase();
         Connection connection = null;
         dataBase.setNameDataBase(this.textNameDB.getText().trim());
@@ -138,9 +149,15 @@ extends JDialog {
             if (connection != null) {
                 this.clearConfig();
                 this.dispose();
-                CopyFileDB copyFileDB = new CopyFileDB();
-                copyFileDB.getDataParking(connection);
-                copyFileDB.getDataTypeVehicle(connection);
+                parking = copyFileDB.getDataParking(connection);
+                tipoVehiculoList = copyFileDB.getDataTypeVehicle(connection);
+                
+                parkingCloudList = copyFileMyDB.getDataParking();
+                
+                
+                
+                System.out.println(parkingCloudList.toString());
+                //System.out.println(tipoVehiculoList.toString());
                 JOptionPane.showMessageDialog(null, "Configuracion Exitosa!");
             } else {
                 JOptionPane.showMessageDialog(null, "Configuracion Fallida!");
@@ -149,7 +166,7 @@ extends JDialog {
             JOptionPane.showMessageDialog(null, "Configuracion Fallida!");
         }
     }
-
+    
     public boolean validateFields(String name, String user) {
         boolean validateName = false;
         boolean validateUser = false;
@@ -164,11 +181,11 @@ extends JDialog {
         }
         return false;
     }
-
+    
     private void clearConfig() {
         this.textNameDB.setText("");
         this.passDB.setText("");
         this.textUserDB.setText("");
     }
-
+    
 }
