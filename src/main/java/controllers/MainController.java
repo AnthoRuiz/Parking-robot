@@ -5,7 +5,10 @@
 */
 package controllers;
 import VO.DataBase;
+import VO.Parking;
 import java.sql.Connection;
+import java.util.ArrayList;
+import models.CheckEquals;
 import models.ConnectionToDB;
 import models.ConnectionToCloudDB;
 import org.quartz.CronScheduleBuilder;
@@ -25,6 +28,8 @@ public class MainController {
     
     private ConnectionToDB connectionToDB = null;
     private ConnectionToCloudDB connectionToCloudDB = null;
+    private CheckEquals checkEquals = new CheckEquals();
+
     
     public void startSystem() {
         MainView mainView = new MainView();
@@ -64,6 +69,10 @@ public class MainController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public int checkEqueals(Parking parking, ArrayList<Parking> parkingCloudList) {
+        return this.checkEquals.checkParkings(parking, parkingCloudList);
     }
     
 }

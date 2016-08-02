@@ -6,6 +6,7 @@
 package controllers;
 
 import VO.Parking;
+import VO.Tarifa;
 import VO.TipoVehiculo;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -74,6 +75,30 @@ public class CopyFileDB {
             System.out.println("SQLException en la consulta: " + e.getMessage());
         }
         return tipoVehiculoList;
+    }
+    
+        public Tarifa getTarifa(Connection connection){
+        Tarifa tarifa = new Tarifa();
+        PreparedStatement preStatement = null;
+        ResultSet result = null;
+        
+        String query = "SELECT * FROM tarifasrangos where id =" + 1;
+        
+        try {
+            preStatement = connection.prepareStatement(query);
+            
+            result = preStatement.executeQuery();
+            
+            while(result.next()){
+                tarifa.setMinutos(result.getInt("minutos"));
+                tarifa.setValor(result.getInt("valor"));
+                System.out.println(tarifa.toString());
+            }
+            result.close();
+        } catch (SQLException e) {
+            System.out.println("SQLException en la consulta: " + e.getMessage());
+        }
+        return tarifa;
     }
     
     

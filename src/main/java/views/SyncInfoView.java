@@ -7,6 +7,7 @@ package views;
 
 import VO.DataBase;
 import VO.Parking;
+import VO.Tarifa;
 import VO.TipoVehiculo;
 import controllers.CopyFileDB;
 import controllers.CopyFileMyDB;
@@ -134,11 +135,12 @@ public class SyncInfoView
     private void addConfigDataBase() {
         Parking parking = new Parking();
         ArrayList<TipoVehiculo> tipoVehiculoList = new ArrayList<TipoVehiculo>();
+        Tarifa tarifa = new Tarifa();
         
         ArrayList<Parking> parkingCloudList = new ArrayList<Parking>();
         CopyFileDB copyFileDB = new CopyFileDB();
         CopyFileMyDB copyFileMyDB = new CopyFileMyDB();
-        //TipoVehiculo tipoVehiculo = new TipoVehiculo();
+        int cloudParkingIndex;
         DataBase dataBase = new DataBase();
         Connection connection = null;
         dataBase.setNameDataBase(this.textNameDB.getText().trim());
@@ -151,8 +153,10 @@ public class SyncInfoView
                 this.dispose();
                 parking = copyFileDB.getDataParking(connection);
                 tipoVehiculoList = copyFileDB.getDataTypeVehicle(connection);
+                tarifa = copyFileDB.getTarifa(connection);
                 
                 parkingCloudList = copyFileMyDB.getDataParking();
+                cloudParkingIndex = this.mainController.checkEqueals(parking, parkingCloudList);
                 
                 
                 

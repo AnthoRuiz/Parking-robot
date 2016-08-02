@@ -13,6 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  *
@@ -35,7 +36,7 @@ public class CopyFileMyDB {
         connection = this.mainController.ConnectionToCloudDB(dataBase);
         
         ArrayList<Parking> ParkingCloudList = new ArrayList<Parking>();
-        Parking parking = new Parking();
+        
         
         PreparedStatement preStatement = null;
         ResultSet result = null;
@@ -48,6 +49,7 @@ public class CopyFileMyDB {
             result = preStatement.executeQuery();
             
             while(result.next()){
+                Parking parking = new Parking();
                 parking.setNombre(result.getString("nombre"));
                 parking.setHorarioInicio(result.getString("horario"));
                 parking.setDireccion(result.getString("direccion"));
@@ -55,9 +57,7 @@ public class CopyFileMyDB {
                 parking.setLatitud(result.getString("latitud"));
                 parking.setLongitud(result.getString("longitud"));
                 ParkingCloudList.add(parking);
-                //System.out.println(parking.toString());
             }
-            //System.out.println(parking.toString());
             result.close();
         } catch (SQLException e) {
             System.out.println("SQLException en la consulta: " + e.getMessage());
