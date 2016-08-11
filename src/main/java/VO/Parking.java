@@ -46,11 +46,9 @@ public class Parking {
 
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 79 * hash + Objects.hashCode(this.nombre);
-        hash = 79 * hash + Objects.hashCode(this.direccion);
-        hash = 79 * hash + Objects.hashCode(this.latitud);
-        hash = 79 * hash + Objects.hashCode(this.longitud);
+        int hash = 7;
+        hash = 29 * hash + Objects.hashCode(this.latitud);
+        hash = 29 * hash + Objects.hashCode(this.longitud);
         return hash;
     }
 
@@ -66,12 +64,6 @@ public class Parking {
             return false;
         }
         final Parking other = (Parking) obj;
-        if (!Objects.equals(this.nombre, other.nombre)) {
-            return false;
-        }
-        if (!Objects.equals(this.direccion, other.direccion)) {
-            return false;
-        }
         if (!Objects.equals(this.latitud, other.latitud)) {
             return false;
         }

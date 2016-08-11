@@ -21,6 +21,8 @@ import models.ConnectionToDB;
  */
 public class CopyFileDB {
     
+    private ArrayList<TipoVehiculo> tipoVehiculoList = new ArrayList<TipoVehiculo>();
+    
     public Parking getDataParking(Connection connection){
         Parking parking = new Parking();
         PreparedStatement preStatement = null;
@@ -51,9 +53,9 @@ public class CopyFileDB {
         return parking;
     }
     
-    public ArrayList<TipoVehiculo> getDataTypeVehicle(Connection connection){
-        ArrayList<TipoVehiculo> tipoVehiculoList = new ArrayList<TipoVehiculo>();
-        TipoVehiculo tipoVehiculo = new TipoVehiculo();
+    public void getTypeVehicle(Connection connection){
+        
+        
         PreparedStatement preStatement = null;
         ResultSet result = null;
         
@@ -65,41 +67,113 @@ public class CopyFileDB {
             result = preStatement.executeQuery();
             
             while(result.next()){
+                TipoVehiculo tipoVehiculo = new TipoVehiculo();
                 tipoVehiculo.setNombre(result.getString("nombre"));
                 tipoVehiculo.setCapacidad(result.getInt("capacidad"));
                 tipoVehiculoList.add(tipoVehiculo);
-                //System.out.println(tipoVehiculo.toString());
             }
             result.close();
         } catch (SQLException e) {
             System.out.println("SQLException en la consulta: " + e.getMessage());
         }
-        return tipoVehiculoList;
+        getTarifaId(connection);
     }
     
-        public Tarifa getTarifa(Connection connection){
-        Tarifa tarifa = new Tarifa();
+    public void getTarifaId(Connection connection){
         PreparedStatement preStatement = null;
         ResultSet result = null;
         
-        String query = "SELECT * FROM tarifasrangos where id =" + 1;
+        TipoVehiculo tipoVehiculo = new TipoVehiculo();
+        int size = tipoVehiculoList.size();
+        
+        String query = "SELECT * FROM tarifas where vehiculotipo_id = ?";
         
         try {
             preStatement = connection.prepareStatement(query);
-            
-            result = preStatement.executeQuery();
-            
-            while(result.next()){
-                tarifa.setMinutos(result.getInt("minutos"));
-                tarifa.setValor(result.getInt("valor"));
-                System.out.println(tarifa.toString());
+            for(int i = 0; i < size; i++){
+                preStatement.setInt(1, i+1);
+                result = preStatement.executeQuery();
+                String tarifas = "";
+                while(result.next()){
+                    if(result.isLast()){
+                        tarifas = tarifas.concat(result.getString("id"));
+                    }else{
+                        tarifas = tarifas.concat(result.getString("id") + ",");
+                    }
+                }
+                tipoVehiculo = tipoVehiculoList.get(i);
+                tipoVehiculo.setTarifa(tarifas);
+                tipoVehiculoList.set(i, tipoVehiculo);
+                result.close();
             }
-            result.close();
+            
         } catch (SQLException e) {
             System.out.println("SQLException en la consulta: " + e.getMessage());
         }
-        return tarifa;
+        getTarifa(connection);
     }
     
+    public void getTarifa(Connection connection){
+        PreparedStatement preStatement = null;
+        ResultSet result = null;
+        
+        int size = tipoVehiculoList.size();
+        
+        TipoVehiculo tipoVehiculo = new TipoVehiculo();
+        
+        String query = "SELECT * FROM tarifasrangos WHERE tarifas_id = ?";
+        
+        try {
+            preStatement = connection.prepareStatement(query);
+            for(int i = 0; i < size; i++){
+                
+                tipoVehiculo = tipoVehiculoList.get(i);
+                String[] idsList;
+                idsList = tipoVehiculo.getTarifa().split(",");
+                tipoVehiculo = tipoVehiculoList.get(i);
+                tipoVehiculo.setTarifa("999999");
+                tipoVehiculoList.set(i, tipoVehiculo);
+                for(String id : idsList){
+                    if(!id.isEmpty()){
+                        preStatement.setInt(1, Integer.valueOf(id));
+                        ArrayList<Tarifa> valorList = new ArrayList<Tarifa>();
+                        result = preStatement.executeQuery();
+                        String tarifas = "";
+                        while(result.next()){
+                            Tarifa tarifa = new Tarifa();
+                            tarifa.setId(result.getInt("id"));
+                            tarifa.setIdTarifa(result.getInt("tarifas_id"));
+                            tarifa.setValor(result.getInt("valor"));
+                            valorList.add(tarifa);
+                        }
+                        
+                        if(getMin(valorList).getValor() < Integer.valueOf(tipoVehiculoList.get(i).getTarifa())){
+                            tipoVehiculo.setTarifa(String.valueOf(getMin(valorList).getValor()));
+                            tipoVehiculoList.set(i, tipoVehiculo);
+                        }
+                        System.out.println(i);
+                        System.out.println(String.valueOf(getMin(valorList).getValor()));
+                    }
+                    result.close();
+                }
+            }
+            
+        } catch (SQLException e) {
+            System.out.println("SQLException en la consulta: " + e.getMessage());
+        }
+        System.out.println(tipoVehiculoList.toString());
+    }
     
+    public Tarifa getMin(ArrayList<Tarifa> valorList){
+        int tmp = 999999;
+        int indice = 0;
+        int idx = valorList.size();
+        for(int i = 0; i < idx; i++){
+            if(valorList.get(i).getValor() < tmp){
+                tmp = valorList.get(i).getValor();
+                indice = i;
+            }
+        }
+        return valorList.get(indice);
+    }
 }

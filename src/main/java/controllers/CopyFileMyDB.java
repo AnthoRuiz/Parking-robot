@@ -34,10 +34,8 @@ public class CopyFileMyDB {
         dataBase.setPass(BD_PASS);
         dataBase.setUser(BD_USER);
         connection = this.mainController.ConnectionToCloudDB(dataBase);
-        
         ArrayList<Parking> ParkingCloudList = new ArrayList<Parking>();
-        
-        
+            
         PreparedStatement preStatement = null;
         ResultSet result = null;
         
@@ -62,6 +60,7 @@ public class CopyFileMyDB {
         } catch (SQLException e) {
             System.out.println("SQLException en la consulta: " + e.getMessage());
         }
+        
         return ParkingCloudList;
     }
 }

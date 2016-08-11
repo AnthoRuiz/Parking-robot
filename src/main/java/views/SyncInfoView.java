@@ -135,7 +135,6 @@ public class SyncInfoView
     private void addConfigDataBase() {
         Parking parking = new Parking();
         ArrayList<TipoVehiculo> tipoVehiculoList = new ArrayList<TipoVehiculo>();
-        Tarifa tarifa = new Tarifa();
         
         ArrayList<Parking> parkingCloudList = new ArrayList<Parking>();
         CopyFileDB copyFileDB = new CopyFileDB();
@@ -151,17 +150,15 @@ public class SyncInfoView
             if (connection != null) {
                 this.clearConfig();
                 this.dispose();
-                parking = copyFileDB.getDataParking(connection);
-                tipoVehiculoList = copyFileDB.getDataTypeVehicle(connection);
-                tarifa = copyFileDB.getTarifa(connection);
+                parking = copyFileDB.getDataParking(connection);//parking de aparcaderos
+                copyFileDB.getTypeVehicle(connection);//tipo de vehiculos y capacidad de aparcaderos
                 
                 parkingCloudList = copyFileMyDB.getDataParking();
-                cloudParkingIndex = this.mainController.checkEqueals(parking, parkingCloudList);
+                cloudParkingIndex = this.mainController.checkEqueals(parking, parkingCloudList);        
                 
                 
-                
-                //System.out.println(parkingCloudList.toString());
-                //System.out.println(tipoVehiculoList.toString());
+                //System.out.println(cloudParkingIndex);
+                //System.out.println(tipoVehiculoList.size());
                 JOptionPane.showMessageDialog(null, "Configuracion Exitosa!");
             } else {
                 JOptionPane.showMessageDialog(null, "Configuracion Fallida!");

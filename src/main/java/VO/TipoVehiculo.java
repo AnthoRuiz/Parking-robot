@@ -14,25 +14,50 @@ import java.util.Objects;
 public class TipoVehiculo {
     private String nombre;
     private int capacidad;
+    private String tarifa;
 
-    public TipoVehiculo(String nombre, int capacidad) {
+    public TipoVehiculo(String nombre, int capacidad, String tarifa) {
         this.nombre = nombre;
         this.capacidad = capacidad;
+        this.tarifa = tarifa;
     }
     
-    public TipoVehiculo() {
+        public TipoVehiculo() {
         this.nombre = null;
         this.capacidad = 0;
+        this.tarifa = null;
     }
 
-    @Override
-    public String toString() {
-        return "TipoVehiculo{" + "nombre=" + nombre + ", capacidad=" + capacidad + '}';
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public int getCapacidad() {
+        return capacidad;
+    }
+
+    public void setCapacidad(int capacidad) {
+        this.capacidad = capacidad;
+    }
+
+    public String getTarifa() {
+        return tarifa;
+    }
+
+    public void setTarifa(String tarifa) {
+        this.tarifa = tarifa;
     }
 
     @Override
     public int hashCode() {
         int hash = 7;
+        hash = 71 * hash + Objects.hashCode(this.nombre);
+        hash = 71 * hash + this.capacidad;
+        hash = 71 * hash + Objects.hashCode(this.tarifa);
         return hash;
     }
 
@@ -54,27 +79,14 @@ public class TipoVehiculo {
         if (!Objects.equals(this.nombre, other.nombre)) {
             return false;
         }
+        if (!Objects.equals(this.tarifa, other.tarifa)) {
+            return false;
+        }
         return true;
     }
 
-    public String getNombre() {
-        return nombre;
+    @Override
+    public String toString() {
+        return "TipoVehiculo{" + "nombre=" + nombre + ", capacidad=" + capacidad + ", tarifa=" + tarifa + '}';
     }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public int getCapacidad() {
-        return capacidad;
-    }
-
-    public void setCapacidad(int capacidad) {
-        this.capacidad = capacidad;
-    }
-    
-    
-
-    
-    
 }

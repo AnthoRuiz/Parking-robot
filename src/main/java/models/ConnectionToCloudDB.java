@@ -18,7 +18,7 @@ public class ConnectionToCloudDB {
     }
     
     public ConnectionToCloudDB(DataBase dataBase) {
-        String URL2 = "jdbc:mysql://localhost:3306/" + dataBase.getNameDataBase() + "?autoReconnect=true&useSSL=false&allowMultiQueries=true";
+        String URL2 = "jdbc:mysql://localhost:3306/" + dataBase.getNameDataBase() + "?autoReconnect=true&useSSL=false";
         try {
             Class.forName("com.mysql.jdbc.Driver");
             this.connection = DriverManager.getConnection(URL2, dataBase.getUser(), dataBase.getPass());
