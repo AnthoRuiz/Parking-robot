@@ -53,9 +53,7 @@ public class CopyFileDB {
         return parking;
     }
     
-    public void getTypeVehicle(Connection connection){
-        
-        
+    public ArrayList<TipoVehiculo> getTypeVehicle(Connection connection){
         PreparedStatement preStatement = null;
         ResultSet result = null;
         
@@ -76,10 +74,10 @@ public class CopyFileDB {
         } catch (SQLException e) {
             System.out.println("SQLException en la consulta: " + e.getMessage());
         }
-        getTarifaId(connection);
+        return(getTarifaId(connection));
     }
     
-    public void getTarifaId(Connection connection){
+    public ArrayList<TipoVehiculo> getTarifaId(Connection connection){
         PreparedStatement preStatement = null;
         ResultSet result = null;
         
@@ -110,10 +108,10 @@ public class CopyFileDB {
         } catch (SQLException e) {
             System.out.println("SQLException en la consulta: " + e.getMessage());
         }
-        getTarifa(connection);
+        return(getTarifa(connection));
     }
     
-    public void getTarifa(Connection connection){
+    public ArrayList<TipoVehiculo> getTarifa(Connection connection){
         PreparedStatement preStatement = null;
         ResultSet result = null;
         
@@ -126,7 +124,6 @@ public class CopyFileDB {
         try {
             preStatement = connection.prepareStatement(query);
             for(int i = 0; i < size; i++){
-                
                 tipoVehiculo = tipoVehiculoList.get(i);
                 String[] idsList;
                 idsList = tipoVehiculo.getTarifa().split(",");
@@ -138,7 +135,6 @@ public class CopyFileDB {
                         preStatement.setInt(1, Integer.valueOf(id));
                         ArrayList<Tarifa> valorList = new ArrayList<Tarifa>();
                         result = preStatement.executeQuery();
-                        String tarifas = "";
                         while(result.next()){
                             Tarifa tarifa = new Tarifa();
                             tarifa.setId(result.getInt("id"));
@@ -151,17 +147,14 @@ public class CopyFileDB {
                             tipoVehiculo.setTarifa(String.valueOf(getMin(valorList).getValor()));
                             tipoVehiculoList.set(i, tipoVehiculo);
                         }
-                        System.out.println(i);
-                        System.out.println(String.valueOf(getMin(valorList).getValor()));
                     }
                     result.close();
                 }
             }
-            
         } catch (SQLException e) {
             System.out.println("SQLException en la consulta: " + e.getMessage());
         }
-        System.out.println(tipoVehiculoList.toString());
+        return(getDisp(connection));
     }
     
     public Tarifa getMin(ArrayList<Tarifa> valorList){
@@ -175,5 +168,35 @@ public class CopyFileDB {
             }
         }
         return valorList.get(indice);
+    }
+    
+    public ArrayList<TipoVehiculo> getDisp(Connection connection){
+        PreparedStatement preStatement = null;
+        ResultSet result = null;
+        
+        int size = tipoVehiculoList.size();
+        TipoVehiculo tipoVehiculo = new TipoVehiculo();
+        
+        String query = "SELECT * FROM parqueo WHERE vehiculotipo_id = ?";
+        
+        try {
+            preStatement = connection.prepareStatement(query);
+            for(int i = 0; i < size; i++){
+                int entrada = 0;
+                tipoVehiculo = tipoVehiculoList.get(i);
+                preStatement.setInt(1, i+1);
+                result = preStatement.executeQuery();
+                while(result.next()){
+                    if(result.getString("estado").equals("E")){
+                        entrada++;
+                    }
+                }
+                tipoVehiculo.setDisp(tipoVehiculo.getCapacidad() - entrada);
+                tipoVehiculoList.set(i, tipoVehiculo);
+            }
+        } catch (SQLException e) {
+            System.out.println("SQLException en la consulta: " + e.getMessage());
+        }
+        return(tipoVehiculoList);
     }
 }

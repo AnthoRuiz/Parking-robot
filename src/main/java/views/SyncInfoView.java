@@ -151,8 +151,9 @@ public class SyncInfoView
                 this.clearConfig();
                 this.dispose();
                 parking = copyFileDB.getDataParking(connection);//parking de aparcaderos
-                copyFileDB.getTypeVehicle(connection);//tipo de vehiculos y capacidad de aparcaderos
                 
+                tipoVehiculoList = copyFileDB.getTypeVehicle(connection);//tipo de vehiculos y capacidad de aparcaderos
+                System.out.println(tipoVehiculoList);
                 parkingCloudList = copyFileMyDB.getDataParking();
                 cloudParkingIndex = this.mainController.checkEqueals(parking, parkingCloudList);        
                 
