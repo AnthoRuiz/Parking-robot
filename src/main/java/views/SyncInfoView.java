@@ -34,6 +34,7 @@ import javax.swing.JRootPane;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+import request.ParkingRequest;
 
 public class SyncInfoView
         extends JDialog {
@@ -135,7 +136,7 @@ public class SyncInfoView
     private void addConfigDataBase() {
         Parking parking = new Parking();
         ArrayList<TipoVehiculo> tipoVehiculoList = new ArrayList<TipoVehiculo>();
-        
+        ParkingRequest parkingRequest = new ParkingRequest();
         ArrayList<Parking> parkingCloudList = new ArrayList<Parking>();
         CopyFileDB copyFileDB = new CopyFileDB();
         CopyFileMyDB copyFileMyDB = new CopyFileMyDB();
@@ -153,12 +154,15 @@ public class SyncInfoView
                 parking = copyFileDB.getDataParking(connection);//parking de aparcaderos
                 
                 tipoVehiculoList = copyFileDB.getTypeVehicle(connection);//tipo de vehiculos y capacidad de aparcaderos
-                System.out.println(tipoVehiculoList);
+                //System.out.println(tipoVehiculoList);
                 parkingCloudList = copyFileMyDB.getDataParking();
-                cloudParkingIndex = this.mainController.checkEqueals(parking, parkingCloudList);        
+                cloudParkingIndex = this.mainController.checkEqueals(parking, parkingCloudList);
                 
+                parkingRequest = copyFileMyDB.parkingRequest(parking, tipoVehiculoList, cloudParkingIndex);
                 
+                System.out.println(parkingRequest);
                 //System.out.println(cloudParkingIndex);
+                //System.out.println(parking);
                 //System.out.println(tipoVehiculoList.size());
                 JOptionPane.showMessageDialog(null, "Configuracion Exitosa!");
             } else {

@@ -6,6 +6,7 @@
 package controllers;
 import VO.DataBase;
 import VO.Parking;
+import VO.TipoVehiculo;
 import java.sql.Connection;
 import java.util.ArrayList;
 import models.CheckEquals;
@@ -18,6 +19,7 @@ import org.quartz.Scheduler;
 import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
 import org.quartz.impl.StdSchedulerFactory;
+import request.ParkingRequest;
 import views.MainView;
 
 /**

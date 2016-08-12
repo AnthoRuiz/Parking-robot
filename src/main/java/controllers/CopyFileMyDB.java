@@ -14,6 +14,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import request.ParkingRequest;
+import request.TipoVehiculoRequest;
 
 /**
  *
@@ -35,7 +37,7 @@ public class CopyFileMyDB {
         dataBase.setUser(BD_USER);
         connection = this.mainController.ConnectionToCloudDB(dataBase);
         ArrayList<Parking> ParkingCloudList = new ArrayList<Parking>();
-            
+        
         PreparedStatement preStatement = null;
         ResultSet result = null;
         
@@ -62,5 +64,27 @@ public class CopyFileMyDB {
         }
         
         return ParkingCloudList;
+    }
+    
+    public ParkingRequest parkingRequest(Parking parking, ArrayList<TipoVehiculo> tipoVehiculoList, int cloudParkingIndex) {
+        ParkingRequest parkingRequest = new ParkingRequest();
+        ArrayList<TipoVehiculoRequest> tipoVehiculoRequestList = new ArrayList<TipoVehiculoRequest>();
+        parkingRequest.setId(cloudParkingIndex);
+        parkingRequest.setNombre(parking.getNombre());
+        parkingRequest.setHorario("Apertura: " + parking.getHorarioInicio() + " " + "Cierre: " + parking.getHorarioFin());
+        parkingRequest.setDireccion(parking.getDireccion());
+        parkingRequest.setTelefono(parking.getTelefono());
+        parkingRequest.setLatitud(parking.getLatitud());
+        parkingRequest.setLongitud(parking.getLongitud());
+        for(int i = 0; i < tipoVehiculoList.size(); i++){
+            TipoVehiculoRequest tipoVehiculoRequest = new TipoVehiculoRequest();
+            tipoVehiculoRequest.setTipoVehiculo(String.valueOf(i));
+            tipoVehiculoRequest.setCeldas(String.valueOf(tipoVehiculoList.get(i).getDisp()));
+            tipoVehiculoRequest.setTotal(String.valueOf(tipoVehiculoList.get(i).getCapacidad()));
+            tipoVehiculoRequest.setTarifa(String.valueOf(tipoVehiculoList.get(i).getTarifa()));
+            tipoVehiculoRequestList.add(tipoVehiculoRequest);
+            parkingRequest.setTipoVehiculoList(tipoVehiculoRequestList);
+        }
+        return parkingRequest;
     }
 }

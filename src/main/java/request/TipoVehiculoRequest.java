@@ -9,22 +9,25 @@ package request;
  *
  * @author Jarvis
  */
-public class Disponible {
+public class TipoVehiculoRequest {
     
     String tipoVehiculo;
     String celdas;
     String total;
+    String tarifa;
 
-        public Disponible() {
-        this.tipoVehiculo = null;
-        this.celdas = null;
-        this.total = null;
-    }
-    
-    public Disponible(String tipoVehiculo, String celdas, String total) {
+    public TipoVehiculoRequest(String tipoVehiculo, String celdas, String total, String tarifa) {
         this.tipoVehiculo = tipoVehiculo;
         this.celdas = celdas;
         this.total = total;
+        this.tarifa = tarifa;
+    }
+    
+    public TipoVehiculoRequest() {
+        this.tipoVehiculo = null;
+        this.celdas = null;
+        this.total = null;
+        this.tarifa = null;
     }
 
     public String getTipoVehiculo() {
@@ -50,7 +53,17 @@ public class Disponible {
     public void setTotal(String total) {
         this.total = total;
     }
-    
-    
-    
+
+    public String getTarifa() {
+        return tarifa;
+    }
+
+    public void setTarifa(String tarifa) {
+        this.tarifa = tarifa;
+    }
+
+    @Override
+    public String toString() {
+        return "TipoVehiculoRequest{" + "tipoVehiculo=" + tipoVehiculo + ", celdas=" + celdas + ", total=" + total + ", tarifa=" + tarifa + '}';
+    }
 }
